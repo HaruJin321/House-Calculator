@@ -1,0 +1,226 @@
+#Harry Hor
+
+import tkinter
+from tkinter import *
+from tkinter import messagebox
+from tkinter.tix import CheckList
+
+# Creating the window and setting the title and size along with the frames for the GUI
+tk = tkinter
+root = Tk()
+root.title("House Event Calculator")
+root.geometry("630x200")
+GUI_frame = LabelFrame(root)
+GUI_frame.grid(row=0, column=0, padx=25, pady=10)
+
+# List to hold all events and to be used in the option menu
+house_events_inputted = []
+menu_of_events = ["House Trivia", "Lampada Games"]
+
+
+#It generates an object named Event, which contains the event's name, type, the points awarded to each house, and the winner.
+class Event:
+    def __init__(self, name, event_type, red_points, blue_points, yellow_points, green_points, winner_of_event):
+        self.name = name
+        self.event_type = event_type
+        self.red_points = red_points
+        self.blue_points = blue_points
+        self.yellow_points = yellow_points
+        self.green_points = green_points
+        self.who_won = winner_of_event
+
+#Prints the info that the user has added. 
+    def details(self):
+        return(["Event : " + self.name, "Is it a sport: " + self.event_type, "Pohutukawa: " + str(self.red_points)
+               + " Points", "Kauri: " + str(self.blue_points) + " Points", "Kowhai: " + str(self.yellow_points)
+              + " Points", "Rimu: " + str(self.green_points) + " Points", "Winner: " + self.who_won])
+
+    
+#This function takes the total points earned by each team the user has inputted and displays them into the leaderboard label.
+def ranks(total_yellow_points, total_red_points, total_blue_points, total_green_points):
+    for data in house_events_inputted:
+        total_red_points += data.red_points
+        total_red_label = Label(GUI_frame, text=total_red_points,background="#DCDCDC")
+        total_red_label.grid(padx=10, column=6, row=2)
+
+        total_blue_points += data.blue_points
+        total_blue_label = Label(GUI_frame, text=total_blue_points,background="#DCDCDC")
+        total_blue_label.grid(column=6, row=3)
+
+        total_yellow_points += data.yellow_points
+        total_yellow_label = Label(GUI_frame, text=total_yellow_points,background="#DCDCDC")
+        total_yellow_label.grid(row=4, column=6)
+
+        total_green_points += data.green_points
+        total_green_label = Label(GUI_frame, text=total_red_points,background="#DCDCDC")
+        total_green_label.grid(column=6, row=5)  
+
+# Creating labels for the leaderboard and positioning them. 
+Label(GUI_frame, text="LEADERBOARD                                  ").grid(column=6, row=1, padx=10)
+Label(GUI_frame, text="Pohutukawa:                                  ").grid(column=6, row=2)
+Label(GUI_frame, text="Kauri:                                  ").grid(column=6, row=3)
+Label(GUI_frame, text="Kowhai:                                  ").grid(column=6, row=4)
+Label(GUI_frame, text="Rimu:                                  ").grid(column=6, row=5)
+
+
+# It takes the chosen event from the drop down menu and then searches through the list of events to
+# find the one that matches the chosen event.
+def print_event_details():
+     input = selected_event.get()
+     for info in house_events_inputted:
+        if input == info.name:
+            global event_name
+            event_name.destroy()
+            event_name = tkinter.OptionMenu(GUI_frame, selected_event, *menu_of_events)
+            event_name.grid(row=2, column=3)
+            tk.messagebox.showinfo("Selected Event Details","\n".join(info.details()))
+
+#Created button called "Show Record". This button will call the command print_event_details function when it is clicked
+query_btn = Button(GUI_frame, text="Show Selected Event", command=print_event_details)
+query_btn.grid(row=4, column=3)
+
+# Creating an option menu that will be used to display the events that have been added.
+selected_event = tkinter.StringVar()
+selected_event.set("Choose a event")
+event_name = tkinter.OptionMenu(GUI_frame, selected_event, *menu_of_events, "")
+event_name.grid(row=2, column=3)
+
+
+#This function is to help the user if they need intructions
+def help():
+    messagebox.showinfo("Help", "Enter in data inside the text boxes with respect to their text label. Then press 'Save Event'. You may chose an event using the drop down menu then click on 'Show Selected Event' to view the details. Leaderboard is displayed on the right side showing the total scores of the house competition.")
+tkinter.Button(GUI_frame, text= "?",command=help,background="#E5E4E2").grid(row=5, column=7)
+
+
+
+#This function takes the values from the entry boxes and assigns them to variables
+def save():
+    #using global so i can access selected_event and event_name data that are outside the function
+    global selected_event
+    global event_name
+
+    name = name_event.get()
+    type_of_event = sport_event.get()
+    red_points = int(red_house.get())
+    blue_points = int(blue_house.get())
+    yellow_points = int(yellow_house.get())
+    green_points = int(green_house.get())  
+
+    #Default value of the leaderboard
+    ranks(0,0,0,0)
+
+   #Checking if the name of the event is not empty and if the name of the event is not in the list of events
+    if name.strip() != " " and name not in menu_of_events:
+        #Sorting the scores in descending order.
+        sum_total = [("Pohutukawa ", red_points),("Kauri ", blue_points),("Kowhai ", yellow_points),("Rimu ", green_points)]
+        sum_total.sort(reverse=True, key=lambda x: x[1])
+       
+        # Checking if the user input points of each house is greater than 100, or less than 0. If it is, it will display a
+        # warning message.
+        if red_points > 100 or blue_points > 100 or yellow_points > 100 or green_points > 100: 
+            messagebox>messagebox.showwarning("Points Error","Maximum number you can input is 100")
+
+        if red_points < 0:
+            messagebox<messagebox.showwarning("Points Error","Minimum number you can input is 0")
+        if blue_points < 0:
+            messagebox<messagebox.showwarning("Points Error","Minimum number you can input is 0")
+        if yellow_points < 0:
+            messagebox<messagebox.showwarning("Points Error","Minimum number you can input is 0")
+        if green_points < 0:
+            messagebox<messagebox.showwarning("Points Error","Minimum number you can input is 0")
+
+        if red_points == '' or blue_points == '' or yellow_points == ''or green_points == '':
+            messagebox.showwarning("Points Error","Minimum number you can input is 0")
+
+        #This statements checks if the points of each house is equal to each other, which will set the winner of the event
+        #to "Tie". If the points are not equal and one house points is greater than the other, it will set the winner of
+        #the event to the house with the highest points.
+        else:
+            CheckList =  None
+            if sum_total[0][1] == sum_total[1][1]:
+                CheckList = True
+            else:
+                CheckList = False
+            if sum_total[0][1] != 0:
+                if CheckList == True:
+                    victor = "Tie "
+                else:
+                    victor = sum_total[0][0]
+            else:
+                victor = 0
+            
+                #The event's name gets added to the list of events.
+            menu_of_events.append(str(name))
+            
+            #Adding the name of the event, type of event, points from each house, and the winner to the list of events.
+            house_events_inputted.append(Event(name, type_of_event, red_points, blue_points, yellow_points, green_points, victor))
+            
+            #Replacing the existing option menu with a new one that includes the most recent events list.
+            event_name.destroy()
+            selected_event = tkinter.StringVar()
+            selected_event.set("Choose Event")
+            event_name = tkinter.OptionMenu(GUI_frame, selected_event, *menu_of_events)
+            event_name.grid(row=2, column=3)
+
+    #Checking the list of events to see if the event's name is there. 
+    #If it is, a message indicating that an event with that name has already been added will be displayed.
+    elif name in menu_of_events:
+        messagebox.showinfo("Event Name Error","An event with this name has already been added")
+
+    #clear the text boxes
+    name_event.delete(0, END)
+    sport_event.delete(0, END)
+    red_house.delete(0, END)
+    blue_house.delete(0, END)
+    yellow_house.delete(0, END)
+    green_house.delete(0, END)
+
+# Created button called "Save Event". When the user clicks on this button, the save function will be executed. 
+save_btn = Button(GUI_frame, text="Save Event", command=save)
+save_btn.grid(row=0, column=3)
+
+# Adding pre made events to the list
+house_events_inputted.append(Event("House Trivia", "No", 74, 66, 68, 73, "Kowhai"))
+house_events_inputted.append(Event("Lampada Games", "Yes", 72, 75, 60, 68, "Pohutukawa"))
+
+
+# This creates the labels for the GUI.
+name_event_label = Label(GUI_frame, text="Name of Event",background="#E5E4E2")
+name_event_label.grid(row=0, column=0)
+
+sport_event_label = Label(GUI_frame, text="Is it a Sport",background="#E5E4E2")
+sport_event_label.grid(row=1, column=0)
+
+red_house_label = Label(GUI_frame, text="Pohutukawa Points",background="#E5E4E2")
+red_house_label.grid(row=2, column=0)
+
+blue_house_label = Label(GUI_frame, text="Kauri Points",background="#E5E4E2")
+blue_house_label.grid(row=3, column=0)
+
+yellow_house_label = Label(GUI_frame, text="Kowhai Points",background="#E5E4E2")
+yellow_house_label.grid(row=4, column=0)
+
+green_house_label = Label(GUI_frame, text="Rimu Points",background="#E5E4E2")
+green_house_label.grid(row=5, column=0)
+
+    
+# Creating an entry boxes and widgets in a grid for the user which allows to input the event's name.
+name_event = tk.Entry(GUI_frame, width=17)
+name_event.grid(column=1, row=0, columnspan=2, padx=2)
+sport_event = tkinter.Entry(GUI_frame, width=5)
+sport_event.grid(column=1, row=1, columnspan=2)
+
+# Creating entry boxes and widgets in a grid for the user to input the points for each house earned.
+red_house = Entry(GUI_frame, width=5)
+red_house.grid(column=1, row=2, columnspan=2)
+
+blue_house = Entry(GUI_frame, width=5)
+blue_house.grid(column=1, row=3, columnspan=2)
+
+yellow_house = Entry(GUI_frame, width=5)
+yellow_house.grid(column=1, row=4, columnspan=2)
+
+green_house = Entry(GUI_frame, width=5)
+green_house.grid(column=1, row=5, columnspan=2)
+
+root.mainloop()
