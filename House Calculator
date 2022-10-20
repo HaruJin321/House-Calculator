@@ -180,8 +180,8 @@ save_btn = Button(GUI_frame, text="Save Event", command=save)
 save_btn.grid(row=0, column=3)
 
 # Adding pre made events to the list
-house_events_inputted.append(Event("House Trivia", "No", 74, 66, 68, 73, "Kowhai"))
-house_events_inputted.append(Event("Lampada Games", "Yes", 72, 75, 60, 68, "Pohutukawa"))
+house_events_inputted.append(Event("House Trivia", "No", 66, 68, 74, 73, "Kowhai"))
+house_events_inputted.append(Event("Lampada Games", "Yes", 75, 60, 72, 68, "Pohutukawa"))
 
 
 # This creates the labels for the GUI.
